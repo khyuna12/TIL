@@ -10,3 +10,13 @@
 
 5. `git log` : 버전 확인
 
+---
+### 23.06.07  
+- markdown 정리(test.md)  
+- markdown으로 전날 배운 것들 정리 해보기(class.md, exception.md)  
+- Git 개념, 명령어 정리(Git.md)
+
+<br>
+
+### 23.06.08
+- 전날 배운 git 명령어로 프로필 수정
