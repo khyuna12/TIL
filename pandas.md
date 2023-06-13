@@ -1,7 +1,9 @@
-## pandas
+## **pandas**
 
 <br>
 - 데이터 프레임
+
+<br>
 
 |컬럼|컬럼|컬럼|컬럼|
 |--|--|--|--|
@@ -11,13 +13,196 @@
 
 <br>
 
-1. 데이터 프레임 생성 방법
-   - 파일에서 읽기 (많이 하는 방법)
-   - dict 이용  
-     - df = pd.DataFrame(dict)
-   - 중첩 리스트
-     - df = pd.DataFrame(중첩리스트, index=[], columns=[])
-   - Series 이용
-2. 색인
-   - loc[ ]
-   - iloc[ ]
+---
+
+<br>
+
+### 1. 데이터 프레임 생성 방법
+
+   - **파일**에서 읽기 (많이 하는 방법)
+```python
+df = pd.read_csv('./data/file_name.csv')
+```
+   - **dict** 이용  
+     - `df = pd.DataFrame(dict)`
+
+```python
+df = pd.DataFrame({"col1" : [4 ,5, 6],
+                   "col2" : [7, 8, 9],
+                   "col3" : [10, 11, 12]})
+
+'''
+   col1  col2  col3
+0     4     7    10
+1     5     8    11
+2     6     9    12 
+'''
+```
+   - **중첩 리스트**
+     - `df = pd.DataFrame(중첩리스트, index=[], columns=[])`
+
+```python
+df = pd.DataFrame([[4, 7, 10],[5, 8, 11],[6, 9, 12]],
+                  index=[1, 2, 3],
+                  columns=['col1', 'col2', 'col3'])
+
+'''
+   col1  col2  col3
+1     4     7    10
+2     5     8    11
+3     6     9    12
+'''
+```
+   - **Series** 이용
+```python
+name =     pd.Series(["유관순","안중근"])
+age =      pd.Series([18,31])
+birthday = pd.Series(['1920/09/28','1910/03/26'])
+
+hero = pd.DataFrame([name,age,birthday])
+hero.columns =["hero1", "hero2"]
+hero.index =["이름","나이","생일"]
+print(hero)
+'''
+         hero1       hero2
+이름         유관순         안중근
+나이          18          31
+생일  1920/09/28  1910/03/26
+'''
+```
+
+<br>
+
++) 행,열 바꾸기
+```python
+print(hero.T) 
+'''
+        이름  나이          생일
+hero1  유관순  18  1920/09/28
+hero2  안중근  31  1910/03/26
+'''
+```
+
+<br>
+
+---
+
+<br>
+  
+### 2. 인덱스 관리
+
+- DataFrame 속성
+   - 컬럼정보: `df.columns` 또는 `df.keys()`
+
+   - 인덱스(라벨) 정보: `df.index`
+
+   - 값 정보: `df.values` 또는 `df.to_numpy()`
+
+<br>
+
+0. 인덱스 변경
+```python
+df.index=[값, ...]
+```
+    
+1. `df.set_index(기존컬럼, inplace=True|False)`
+    
+```python
+df.reset_index(drop=False, inplace=True) # 기존 index를 컬럼으로 변경하고 새로운 index 생성
+df.reset_index(drop=True, inplace=True) # 기존 index를 삭제하고 새로운 index 생성
+```
+           
+2. `df.reindex(index=값)`  ==> 기존 index 재배치
+    
+3. `ignore_index = True`  ==> df와 df2 연결시 index도 연결이 되서 중복될 때 index는 빼고 연결하는 방법 (자동으로 index 생성됨)
+
+<br>
+
+---
+
+<br>
+
+### 3. 색인
+
+<br>
+
+**가. [ ]** : 인덱싱 연산자, 컬럼(들)을 선택하는 목적  
+        예> `[컬럼]` ==> *Series* 반환 ( index와 값 으로 구성됨 )  
+            `[[컬럼,컬럼]]` ==> *DataFrame* 반환
+              
+  - **단일컬럼 조회**
+     - `df['컬럼명']`, Series로 반환  
+     - `df.컬럼명`
+        
+  - **다중컬럼 조회**
+     - `df[['컬럼명','컬럼명']]`, DataFrame 반환
+
+**나. .loc** :  **label**만을 사용한다. ( 기본적으로 index의 label로 인식 )  
+               label은 *single, list, slice* 형태 모두 가능하다.  
+               행과 열을 동시에 조회할 수 있다.   
+```python
+df.loc[행,열]
+```
+               
+**다.  .iloc** :   loc와 유사하지만 **정수위치값**만을 사용한다.  
+                   행과 컬럼 모두 위치값 만 사용 가능하다.  
+  - DataFrame 의 행(들) 조회 ==> SQL의  selection 기능
+
+<br>
+
+---
+
+<br>
+
+### 4. 컬럼 추가,삽입 및 삭제
+
+<br>
+
+- DataFrame에 **컬럼 추가**   
+   ==> 기존 컬럼 값을 가지고 추가 정보를 얻을 떄
+
+  - `df['컬럼명'] = 리스트`  
+    `df['컬럼명'] = Series`
+      
+  - `new_df = df.assign(컬럼명=리스트)`
+  - `new_df = df.assign(컬럼명=함수, 컬럼명=함수)`
+  - `new_df = pd.concat([df,df2], axis=1)`
+
+- DataFrame에 **컬럼 삽입**
+
+  - `df.insert(idx, 컬럼명, 값 )`
+
+<br>
+
+- **컬럼 삭제**
+
+   - 단일컬럼 삭제
+      - `df.pop('컬럼명')`
+      - `del df['컬럼명']`
+
+    
+  - 다중컬럼 삭제
+     - `df.drop(columns=리스트)`
+     - `df.drop(리스트, axis=1)`
+
+<br>
+
+### 5. 행 추가 및 삭제
+
+<br>
+
+- DataFrame **행(row) 추가**
+
+  - 한번에 하나씩 추가   
+    `new_df = df._append(df2, ignore_index=True)`     
+    --> 버전업 1.3.0 이후에는 _append로 바뀜
+
+  - 한번에 여러개 추가  
+    `new_df = pd.concat([df,df2,..], axis=0 , ignore_index=True)`
+
+
+- DataFrame **행 삭제**
+
+  - `new_df = df.drop(index=[인덱스명, 인덱스명])`
+
+  - `new_df = df.drop([인덱스명, 인덱스명], axis=0)`
