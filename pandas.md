@@ -206,3 +206,132 @@ df.loc[행,열]
   - `new_df = df.drop(index=[인덱스명, 인덱스명])`
 
   - `new_df = df.drop([인덱스명, 인덱스명], axis=0)`
+
+<br>
+
+---
+
+<br>
+
+## **null**
+
+<br>
+
+### 1. null값 **조회**
+
+<br>
+
+   -  Pandas 함수 이용
+      - `bool = pd.isna(스칼라|Series|df)`
+      - `bool = pd.isnull(스칼라|Series|df)`
+      - `bool = pd.notnull(스칼라|Series|df)`
+
+   -  DataFrame 함수 이용
+      - `bool = df.isnull()`
+      - `bool = df[컬럼명].isnull()`
+      - `bool = df[[컬럼,컬럼2]].isnull()`
+
+<br>
+
+### 2. null값 **삭제**
+
+<br>
+
+   - 행 삭제
+      - `new_df = df.dropna(axis=0|'index', inplace=False)`
+      - `new_df = df.dropna(axis=0|'index', how="any|all", inplace=False)`
+
+
+   - 열 삭제
+      - `new_df = df.dropna(axis=1|'column', inplace=False)`
+      - `new_df = df.dropna(axis=1|'column', how="any|all" , inplace=False)`
+   
+<br>
+
+### 3. null값 **변경**
+
+<br>
+
+- `df.fillna(value, method='bfill|ffill|None', inplace=False, limit=n )`
+
+<br>
+
+---
+
+<br>
+
+### **DataFrame, Series 함수**
+
+- **기술통계 함수**
+   - 최대(소)값         ==>  `df.max(), df.min()`  
+   - 누적최대(소)값,     ==>  `df.cummax(), df.cummin()` 
+   - 최대(소)값label   ==>  `df.idxmax(), df.idxmin()`  
+   - (누적)합계         ==>  `df.sum(), df.cumsum()`  
+   - 평균              ==>  `df.mean()`  
+   - 중앙값            ==>  `df.median()`  
+   - (누적)곱          ==>  `df.prod(), df.cumprod()`  
+   - 사분위             ==>  `df.quantile()`  
+   - 분산               ==>  `df.var()`  
+   - 표준편차           ==>  `df.std()`
+   - count(갯수)         ==>  `df.count()`
+   - 통합 통계           ==>  `df.describe()`
+
+- **기본 함수**
+   - 값 변경            ==>  `df.replace()`  
+   - 컬럼명 및 인덱스명 변경 ==> `df.rename(columns|index)`
+   - 모든(특정) 컬럼(행)값의 참/거짓 여부 ==>  `df.any() , df.all()`
+   - 중복조회 및 제거   ==>  `df.duplicated()`,  `df.drop_duplicates()`
+
+   - 임의의 함수 적용 ==> `df.apply(함수, axis=0|1)`
+      임의의 함수를 한번에 DataFrame의 행과 열에 적용.
+
+   - 값이 있으면 True, 아니면 False ==>`df.isin(집합형)`
+
+   - unique한 값의 갯수 ==> `df.nunique(dropna=True)`
+                              dropna=False 면 nan 포함해서 **개수**반환
+
+   - `df['col1'].value_counts()` ==> 값의 빈도수 반환
+
+   - `df['col1].unique` ==> 유니크 값 반환, **series만** 사용가능
+    
+   - `df['col1'].between(start, end)` ==> 범위에 있으면 True, 없으면 False, **series만** 사용가능
+
+<br>
+
+---
+
+<br>
+
+
+### **Series의 문자열 처리**
+   
+   - series.str.함수
+
+```python
+from pandas import Series
+print(dir(Series.str))
+'''
+['capitalize', 'casefold', 'cat', 'center', 'contains', 'count', 
+'decode', 'encode', 'endswith', 'extract', 'extractall', 
+'find', 'findall', 'fullmatch', 'get', 'get_dummies', 
+'index', 'isalnum', 'isalpha', 'isdecimal', 'isdigit', 'islower', 
+'isnumeric', 'isspace', 'istitle', 'isupper', 'join', 'len', 'ljust', 'lower', 'lstrip', 
+'match', 'normalize', 'pad', 'partition', 'removeprefix', 'removesuffix', 'repeat', 
+'replace', 'rfind', 'rindex', 'rjust', 'rpartition', 'rsplit', 'rstrip', 
+'slice', 'slice_replace', 'split', 'startswith', 'strip', 'swapcase', 
+'title', 'translate', 'upper', 'wrap', 'zfill']
+'''
+```
+
+<br> 
+
+   **<문자열 관련 함수>**
+   - **python**
+     - `문자열.함수`  
+      예) "hello".upper()
+   - **numpy**  
+     - `arr = np.array(['aa', 'Bb', 'cc'])`  
+    => `np.char.함수명`
+   - **pandas**  
+     - `series.str.함수`
+
