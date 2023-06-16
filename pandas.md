@@ -17,7 +17,7 @@
 
 <br>
 
-### 1. 데이터 프레임 생성 방법
+### 1. **데이터 프레임** 생성 방법
 
    - **파일**에서 읽기 (많이 하는 방법)
 ```python
@@ -89,7 +89,7 @@ hero2  안중근  31  1910/03/26
 
 <br>
   
-### 2. 인덱스 관리
+### 2. **인덱스** 관리
 
 - DataFrame 속성
    - 컬럼정보: `df.columns` 또는 `df.keys()`
@@ -122,7 +122,7 @@ df.reset_index(drop=True, inplace=True) # 기존 index를 삭제하고 새로운
 
 <br>
 
-### 3. 색인
+### 3. **색인**
 
 <br>
 
@@ -335,3 +335,113 @@ print(dir(Series.str))
    - **pandas**  
      - `series.str.함수`
 
+<br>
+
+---
+
+<br>
+
+### **pandas를 이용한 날짜 데이터 처리**
+
+<br>
+
+- str --> datetime로 변환
+   - `pd.to_datetime('날짜')` : 연산가능
+```python
+xxx = pd.to_datetime('2023년6월15일', format="%Y년%m월%d일")
+```
+
+- datetime을 지정된 범위에서 반환
+   - `pd.date_range('날짜', '날짜')`
+```python
+xxx = pd.date_range("2023/1/1", "2023/6/1")
+xxx = pd.date_range("2023/1/1", periods=5,  freq="M")
+```
+
+- DatetimeProperties 속성 이용한 날짜 정보 구하기
+   - `df['xxx'].dt.year`
+```python
+print(dir(df['cur_date'].dt))
+'''
+['as_unit', 'ceil', 'date', 'day', 'day_name', 'day_of_week', 'day_of_year', 
+'dayofweek', 'dayofyear', 'days_in_month', 'daysinmonth', 'floor', 'freq', 'hour', 
+'is_leap_year', 'is_month_end', 'is_month_start', 'is_quarter_end', 'is_quarter_start', 
+'is_year_end', 'is_year_start', 'isocalendar', 'microsecond', 'minute', 'month', 'month_name', 
+'nanosecond', 'normalize', 'quarter', 'round', 'second', 'strftime', 'time', 'timetz', 
+'to_period', 'to_pydatetime', 'tz', 'tz_convert', 'tz_localize', 'unit', 'weekday', 'year']
+'''
+```
+
+- datetime --> str로 변환
+   - `df['xxx'].astype(str)`
+
+<br>
+
+---
+
+<br>
+
+### **컬럼 병합**
+
+<br>
+
+**1. inner 병합**
+
+   - 공통 컬럼 이용
+   ```python
+      new_df = pd.merge(df, df2,  how=“inner”  on=“공통컬럼명”)
+
+      new_df = pd.merge(df, df2,  how=“inner”  on=“공통컬럼명”, indicator=True).query("조건식").drop(columns=[컬럼,.])
+   ```
+
+   - 비공통 컬럼 이용
+   ```python
+   new_df = pd.merge(df, df2, how='inner', left_on="x1", right_on="y1")
+
+   new_df = pd.merge(df, df2, how='inner', left_on="x1", right_on="y1")
+   .query("조건식")
+   .drop(columns=[컬럼,.])
+   .rename(columns={컬럼:컬럼})
+   ```
+
+   <br>
+
+**2. outer 병합**
+
+   - 공통컬럼 이용
+   ```python
+   pd.merge(df, df2,  how=“left|right|outer”,  on=“컬럼명”)
+   ```
+
+      - `left`: SQL의 `left outer join` 동일: left는 모두 출력
+      - `right`: SQL의 `right outer join` 동일: right는 모두 출력
+      - `outer`: SQL의 `full outer join` 동일: 모두 출력
+
+   - 비공통컬럼 이용
+   ```python
+   pd.merge(df, df2,  how“left|right|outer”,  left_on=“컬럼명”,  right_on=“컬럼명” )
+   .query("조건식")
+   .drop(columns=[컬럼,.])
+   .rename(columns={컬럼:컬럼})
+   ```
+
+
+
+<br>
+
+---
+
+<br>
+
+### **groupby**
+
+<br>
+
+[참고링크](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html)
+
+- 기본  
+    - `df.groupby('그룹으로 묶을 컬럼명')['선택컬럼'].그룹함수`  
+    예> `emp.groupby(by="deptno")['sal'].sum()`
+
+- apply/agg/aggregate함수  
+    - `df.groupby('그룹으로 묶을 컬럼명')['선택컬럼'].agg(함수명)`
