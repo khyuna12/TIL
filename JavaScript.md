@@ -4,6 +4,8 @@
 <br>
 
 ### 1. ECMAScript6
+  - 표준화된 스크립트 프로그래밍 언어
+  - 비브라우저 실행 가능한 플랫폼(Node js)으로 자바스크립트 실행
 
 <br>
 
@@ -290,6 +292,7 @@
 <br>
 
 ### 8.  반복문
+
   - **while문**
     - 조건식이 false라면 문장이 한번도 실행되지 않음
 
@@ -314,44 +317,44 @@
 - **for문**
 
   - python
-  ```python
-  for 변수 in 집합형:
-    문장
-  ```
+```python
+for 변수 in 집합형:
+  문장
+```
 
   - **JS**
     - 시작값, 조건식, 증감식이 있어야 함
     - 작동방식: 시작값 -> 조건식 -> 문장 -> 증감식 -> 조건식 (조건이 만족하지 않을 때까지 반복)
-  ```js
-  for(시작값;조건식;증감식){
+```js
+for(시작값;조건식;증감식){
     문장
   }
-  ```
-  - while문과 달리 반복횟수 예측 가능
+```
+  - while문과 달리 반복횟수 예측 쉽다 
   - 모든 제어문은 중첩 가능
-  ```js
-  for(var n=1; n<=5; n++){  // 5번
-      for (let m=0; m<2; m++){  // 2번
-        console.log("A")  // 10번
-      }
+```js
+for(var n=1; n<=5; n++){  // 5번
+    for (let m=0; m<2; m++){  // 2번
+      console.log("A")  // 10번
     }
-  ```
+  }
+```
 
 - 반복문 빠져나오기
   - python
-  ```python
-  # break
-  for 변수 in 집합형:
-    문장
-    if 조건식: break
+```python
+# break
+for 변수 in 집합형:
+  문장
+  if 조건식: break
 
-  # continue
-  for 변수 in 집합형:
-    문장1
-    문장2
-    if 조건식: continue  # 조건식 맞으면 문장3 스킵됨
-    문장3 
-  ```
+# continue
+for 변수 in 집합형:
+  문장1
+  문장2
+  if 조건식: continue  # 조건식 맞으면 문장3 스킵됨
+  문장3 
+```
 
   - **JS**
     - python과 비슷
@@ -371,3 +374,212 @@
   }
   ```
 
+<br>
+
+### 9. 객체
+> 첫글자 대문자, 사용하려면 생성 필수!
+
+<br>
+
+- **속성**: property(변수)
+- **동작**: method(함수)
+
+- **종류**
+  - **시스템 정의 객체**(내장 객체, 빌트인 객체)
+    - **Data** 관련 객체: *사용하려면 반드시 명시적으로 생성해야 함*
+      - 수치 관련 객체: `Number`
+      - 문자열 관련 객체: `String`
+      - 날짜 관련 객체: `Date`
+      - 논리 관련 객체: `Boolean`
+      - 배열: `Array`
+    
+    - **브라우저** 관련 객체(BOM): *브라우저를 시작하면 자동 생성됨*
+      - `Window`: 창, **전역 객체(최상위 객체)** 이기 때문에 `window.` 생략가능
+        - 객체를 참조하는 변수: `window`(자동 생성됐기 때문에 정해져있음.)
+        - Window 객체에 있는 함수/property: `alert()`, `prompt()`, `parseInt()`, `navigator`, `screen`, `location`, `history`, `document`
+      - `Screen`: 화면의 크기(너비, 높이)
+        - 객체 참조 변수: `screen`
+      - `Navigator`: 브라우저 정보(크롬, 엣지, ...)
+        - 객체 참조 변수: `navigator`
+      - `History`: 뒤로가기, 앞으로 가기
+        - 객체 참조 변수: `history`
+      - `Location`: 브라우저의 url
+        - 객체 참조 변수: `location`
+        - `location.href`: JS로 링크 만들 수 있음(중요)
+
+    - **문서(html)** 관련 객체(DOM): *브라우저에 html문서를 open할 때 자동생성됨*
+      - DOM 트리 이용해서 node 접근하고 값 변경/수정/삭제/추가
+      - `Document`
+
+  - **사용자 정의 객체**
+    - JSON(JavaScript Object Notation): `{key : value}`(배열도 포함하지만 일반적으로 {key:value}를 뜻함)
+    - 클래스
+
+<br>
+
+- 객체 **생성**
+
+  ```js
+  let str = new String("hello")  // python은 new 없었음
+  let str = "hello"  // 일반적
+  ```
+
+- 객체의 **property와 method 확인**
+  - w3schools.com 확인
+  - `console.dir(str);`-> [prototype] 펼치기
+
+- **propert** 사용
+```js
+console.log(str.length);  // 괄호 안씀
+```
+
+- **method** 사용
+```js
+console.log(str.charAt(0));  // 0번째에 있는 문자 반환
+```
+
+<br>
+
+> 배열 객체 & for문
+
+- python
+```python
+for 변수 in [1,2,3]:
+  문장
+
+# 위치
+for idx, value in enumerate([1,2,3]):
+  문장
+```
+
+- **JS**
+```js
+// 일반 for문 이용
+for(var i=0; i < arr2.length; i++){
+  console.log(arr2[i]);
+} // 10 20 30 
+
+// for~of문(변수에 배열의 값 저장)
+for(let x of arr2){
+  console.log(x);
+} // 10 20 30
+
+// for~in문(변수에 배열의 index 저장)
+for(let x in arr2){
+  console.log(x);
+} // 0 1 2
+```
+
+<br>
+
+### 10. 함수
+
+  - 함수 표현식(이름 없는 함수)
+    - python에선 `lambda`
+```js
+var 변수 = function ([변수, ...]){
+  문장;
+  [return 값];
+}
+```
+
+  - 함수 선언식(이름 있는 함수)
+    - 매개변수랑 인수(호출 시 넣는 값) 개수 달라도 됨
+```js
+function 함수명([변수, ...]){
+  문장;
+  [return 값];
+}
+```
+
+  - **가변인자**
+```js
+var fun2 = function(...n){  // rest 파라미터, 가변인자
+  console.log(n);
+}
+
+// 호출
+fun2(10);        // [10]
+fun2(1,2,3);     // [1, 2, 3]
+fun2(1,2,3,5,7); // [1, 2, 3, 5, 7]
+```
+
+- default 파라미터 & 가변인자
+
+```js
+function fun3(n=1,n2=2, ...n3){
+  console.log(n, n2, n3)
+}
+
+fun3(10);        // 10 2 []
+fun3(1,2,3);     // 1 2 [3]
+fun3(1,2,3,5,7); // 1 2 [3, 5, 7]
+```
+
+- **arrow 함수**
+```js
+// JavaScript
+var x = (n, n2) => n + n2;
+```
+
+```python
+# python
+x = lambda n,n2: n+n2
+```
+
+<br>
+
+### 11. 이벤트(event)
+  - 특별한 사건
+  - **이벤트 발생 주체**
+    - 사용자
+      - 마우스 - 버튼 클릭/더블클릭/드래그/마우스 오버/마우스 아웃
+      - 키보드 - 입력
+    - 시스템
+      - 웹브라우저가 html 문서를 보고 모든 DOM tree를 만들었을 때
+
+  - **이벤트 소스**
+    - 이벤트가 발생한 곳(태그)  
+    예: `<button>ok</button>`
+
+  - **이벤트 타입**
+    - 클릭: click 이벤트 타입
+
+  - **이벤트 핸들러**
+    - 발생된 이벤트 타입과 실제 처리하는 함수를 연결하는 역할
+    - `on이벤트타입 = 함수`: **이벤트 소스**에 설정
+      - `onclick`
+      - `onmouseover`
+      - `onmouseout`
+      - `onkeyup`
+      - 이벤트 발생 주체가 시스템==> `onload`: body에 주로 씀
+```html
+<button onclick="fun()">OK</button>
+<select name="cars" onchange="fun()">         <!-- 선택지 바꿀때마다 -->
+    <option value="">선택하시오</option>
+    <option value="volvo">볼보</option>
+    <option value="saab">사브</option>
+    <option value="audi">아우디</option>
+</select>
+<input type="text" name="username" onkeyup="fun()" onmouseover="fun()" onmouseout="fun()">
+<!--onkeyup: 누르고 떼면-->
+```
+
+- **이벤트 객체**
+  - 이벤트 발생 시 자동 생성
+  - `event.preventDefault()`: (중요) 무조건 동작되는 기능(submit, a href) 방지
+  - `event.stopPropagation()`: 태그 중첩되어 있을 때 이벤트 전파 방지
+
+```js
+function fun2(){
+      event.preventDefault();
+}
+```
+```html
+<form action="target.html" onsubmit="fun2()">
+	이름 <input type="text" name="username"><br>
+	나이 <input type="text" name="age">
+	<input type="submit" value="전송">
+</form> 
+```
+-> 전송 버튼 눌러도 안 넘어감
