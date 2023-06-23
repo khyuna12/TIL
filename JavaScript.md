@@ -407,9 +407,21 @@ for 변수 in 집합형:
         - 객체 참조 변수: `location`
         - `location.href`: JS로 링크 만들 수 있음(중요)
 
-    - **문서(html)** 관련 객체(DOM): *브라우저에 html문서를 open할 때 자동생성됨*
+    - **문서(html)** 관련 객체(DOM): *브라우저에 html문서를 open할 때 tag에 해당되는 객체가 자동생성됨*
       - DOM 트리 이용해서 node 접근하고 값 변경/수정/삭제/추가
       - `Document`
+        - property
+        - method
+          - id로 접근: `document.getElementById("id값")` -> 중첩된 태그가 있다면 같이 반환
+          - CSS 선택자로 접근: `document.querySelector("선택자")`, `document.querySelectorAll("선택자")` -> 현재 태그부터 중첩된 태그, 값까지 반환  
+          예: `document.querySelector(".클래스명")`, `document.querySelector("#id값")`
+        - 반환 값이 객체라면 속성 사용 가능(태그의 속성도 가능)  
+        예: `document.getElementById("x").innerText`, `document.querySelector(".y").innerHTML = "<h1>JS</h1>";`(값 변경)
+      - *tag에서 필요한 값 얻기*
+        - `.innerText`, `.innerHTML` (`div`는 `innerText` 안 됨)
+        - 사용자 입력 form 태그: `.value`
+        - 속성값 얻기 : `<tag property="property_value">` 일 때
+        `.property`
 
   - **사용자 정의 객체**
     - JSON(JavaScript Object Notation): `{key : value}`(배열도 포함하지만 일반적으로 {key:value}를 뜻함)
@@ -583,3 +595,123 @@ function fun2(){
 </form> 
 ```
 -> 전송 버튼 눌러도 안 넘어감
+
+<br>
+
+### 12. template literal
+
+- 문자열 작성 방법
+  - ""
+  - ''
+  - ``(back-tick)
+
+- 쌍따옴표와 홑따옴표
+  - 문자열이 라인 넘어갈 때마다 `\` 필요, 모양 유지 안 됨
+  - 따라서 문자열 안에 html 쓰면 가독성 안 좋음
+  - 문자열 중간에 변수 삽입할 때 `+` 써야 함
+
+- ``(back-tick)
+  - enter 사용가능
+  - 모양 유지 가능
+  - `${변수명}` 으로 변수 삽입 가능
+
+<br>
+
+### 13. Ajax(Asynchronous Javascript And Xml)
+
+- **비동기(<=> 동기)** 자바스크립트와 **데이터(Xml, *JSON*)**
+- **동기** 방식(현재 사용중인 방식)
+  - 순서대로 동작하는 방식
+  - 브라우저가 서버에 파일을 요청하면 서버는 브라우저가 요청한 파일 찾고 html로 돌려줌
+  - 요청 -> search -> 응답(**전체html**)
+  - **장단점**
+    - 전체화면 리로딩, 성능 떨어짐
+    - 작업 순서 보장(결제할 때는 좋음)
+
+- **비동기** 방식(Ajax)
+  - 브라우저가 서버에 파일을 요청하고 서버는 search, 브라우저는 안 기다리고 제 할 일 하는 도중에 서버 응답(html이 아니라 바뀔 **Data**만)
+  - **장단점**
+    - 화면 일부분만 리로딩,  성능 좋음
+    - 순서 보장 안됨, 작업 순서가 중요한 작업은 동기 방식으로 진행해야 함
+  - `XMLHttpRequest` 객체 이용
+    - property
+    - method
+
+  - **실습**
+    - [참고 사이트](https://reqres.in/)
+    - `https://reqres.in/`에 request 붙여넣기해서 data 얻기
+
+  ```js
+  var httpRequest;  // 함수 밖에서도 써야 함
+  function req(){
+    // 1. 객체 생성
+    httpRequest = new XMLHttpRequest();
+    console.dir(httpRequest);
+
+    // 2. 응답시 처리할 수 있는 콜백함수 호출하는 이벤트 핸들러 등록
+    httpRequest.onreadystatechange = responseFun;  // 괄호 X
+
+    // 3. url 정보 및 추가 정보 설정
+    httpRequest.open("get", "https://reqres.in/api/users/2");  // get방식으로 url 요청하겠다
+
+    // 4. 요청
+    httpRequest.send(null);  // get 방식인 경우는 null 지정
+    }
+  ```
+
+  ```js
+  // 응답하는 함수
+  function responseFun(){
+    // 성공인 경우에만 처리
+    if(httpRequest.status == 200 && httpRequest.readyState == 4){
+      var data = httpRequest.responseText;
+      console.log(data, typeof data);
+
+      var jsonData = JSON.parse(data);
+      console.log(jsonData, typeof jsonData);
+
+      var id = jsonData.data.id;
+      var email = jsonData.data.email;
+      var first_name = jsonData.data.first_name;
+      var last_name = jsonData.data.last_name;
+      var avatar = jsonData.data.avatar;
+      console.log(id, email, first_name, last_name, avatar);
+
+      var table = `<table>
+                    <tr>
+                      <th>id</th>
+                      <th>email</th>
+                      <th>first_name</th>
+                      <th>last_name</th>
+                      <th>avatar</th>
+                    </tr> 
+                    <tr>
+                      <td>${id}</td>
+                      <td>${email}</td>
+                      <td>${first_name}</td>
+                      <td>${last_name}</td>
+                      <td><img src="${avatar}" width="100" height="100"></td>
+                    </tr>
+                  </table>`;
+      document.querySelector("#result").innerHTML = table;
+    }
+  }
+  ```
+
+  <br>
+
+### 14. 객체분해할당
+
+- 객체(배열 JSON)를 분해해서 변수로 할당
+
+- **배열**
+```js
+let[a,b,c] = [10,20,30]
+
+var[a,b,c] = [10,20];  // c는 undefined
+```
+
+- **json**
+```js
+var {a,b} = {a:100, b:200};
+```
