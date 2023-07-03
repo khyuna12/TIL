@@ -9,24 +9,32 @@
 
 ## **크롤러의 처리 과정**
 
-1. 수집
+1. **수집**(request, response)
   - 데이터 요청
     - `webbrowser`
       - `webbrowser.open()`
-    - `urllib.request`
+    - `urllib`
       - `urlopen()`
       - `urlretrieve(파일 url, 다운받을 경로)`: 파일 저장된 경로와 header 반환
-2. 분석
+2. **파싱**
   - 텍스트 데이터 -> 구조화 데이터
-3. 추출
+  - HTML 구조화
+  - `BeautifulSoup`
+3. **추출**(scraping)
   - 구조화 데이터 추출
-4. 가공
+  - `find('태그', '속성')`, `find_all()`, `findAll()`
+  - `select()`, `select_one()`: list로 반환
+  - `get_text()`
+  - `text`
+  - `string`
+4. **가공**
   - 가능한 데이터로 가공
-5. 저장
+5. **저장**
   - 데이터베이스에 저장
   - SQL로 검색 가능
-6. 출력
+6. **출력**
   - 시각화
+  - 엑셀 
 
 <br>
 
@@ -34,7 +42,7 @@
 
 <br>
 
-## <웹 브라우저 실행>
+### **<웹 브라우저 실행>**
 - 기본 웹브라우저 자동 실행, 해당 url 주소로 접속
 ```python
 import webbrowser
@@ -46,7 +54,7 @@ True
 
 <br>
 
-## <웹 페이지 추출>
+### **<웹 페이지 추출>**
 
 - 표준 라이브러리 `urilib.request` 모듈 사용
 - `urilib.request`의 `urlopen()`함수 이용
@@ -64,7 +72,7 @@ from urllib.request import urlopen
 
 <br>
 
-## <웹 페이지에서 데이터 추출>
+### **<웹 페이지에서 데이터 추출>**
 
 - **웹 페이지의 HTML 소스 갖고 오기**
 ```python
@@ -77,7 +85,7 @@ r.text[0:100]  # 일부분 출력
 
 <br>
 
-### **BeautifulSoup** 라이브러리
+#### **BeautifulSoup** 라이브러리
 - HTML 소스 **파싱**
 - 태그나 속성을 통해 원하는 데이터 추출
 
@@ -130,7 +138,7 @@ soup3.select('a#naver')[0].get_text()  # select는 리스트로 반환되니까
 ```
 <br>
 
-### **이미지** 내려 받기
+#### **이미지** 내려 받기
 - `os.makedirs(folder)`: 이미지 파일을 내 컴퓨터로 내려받을 폴더 생성
 - `os.path.exists(folder)`: 폴더 존재여부
 ```python
@@ -204,14 +212,14 @@ print("선택한 모든 이미지 내려받기 완료!")
 
 <br>
 
-### **XML 스크레이핑**
+#### **XML 스크레이핑**
   - 블로그 또는 뉴스 웹사이트 등의 웹사이트는 변경 정보 등을 RSS라는 이름의 XML 형식으로 제공
   - html보다 간단히 파싱
   - 내부에 피드를 나타내는 channel 요소가 있음
 
 <br>
 
-### **정규표현식**으로 스크레이핑
+#### **정규표현식**으로 스크레이핑
   - 표준 라이브러리의 re 모듈
 ```python
 import re
@@ -220,10 +228,52 @@ from html import unescape
 
 <br>
 
-## <데이터 저장하기>
+### **<데이터 저장하기>**
 - csv 형식으로 저장
 - JSON 형식으로 저장
 - 데이터베이스에 저장
+
+<br>
+
+### **Selenium**
+- 웹 자동화
+- Chromedriver
+
+- 필요한 라이브러리
+```python
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+```
+
+- 브라우저 열기
+```python
+driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+```
+
+- 웹 드라이버 객체 만들기 및 페이지 이동
+```python
+driver.get("https://www.naver.com/")  # 위에서 뜬 창 닫으면 안됨
+```
+
+- 브라우저 사이즈: `driver.set_window_size(1024, 768)`
+- 브라우저의 스크롤 위치: `driver.execute_script("window.scrollTo(200,300);")`(자바스크립트)
+- alert 다루기
+  - 생성: `driver.execute_script("alert('내용');")`
+  - 확인 버튼 누르기: `alert.accept()`
+  - 체크:
+  ```python
+  try:
+    alert = driver.switch_to.alert
+    print(alert.text)
+  except:
+    print('alert 없음')
+  ```
+
+- 텍스트 데이터 가져오기
+  - `find_element(By.CSS_SELECTOR, "classname")`
+  - `find_elements(By.CSS_SELECTOR, "classname")`
 
 <br>
 
