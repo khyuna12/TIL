@@ -45,10 +45,19 @@
 
 ### **MVT 코딩 순서**
 1. **프로젝트 뼈대** 만들기
+  - 프로젝트: 웹 사이트의 전체 프로그램
+  - 프로젝트와 앱에 필요한 **디렉토리와 파일** 생성
 2. **model** 코딩
+  - 모델: 사용될 데이터에 대한 정의를 담고 있는 장고의 클래스  
+  - ORM기법으로 애플리케이션에서 사용할 DB를 클래스로 매핑해서 코딩
+  - 테이블 관련 사항 개발(table 필드명, 제약사항 등)
 3. **URLconf** 코딩하기
+  - 파이썬의 URL 정의 방식은 자바나 PHP계열의 URL보다 직관적이고 이해하기 쉬음(Elegant URL)
+  - URL및 view 매핑관계 정의
 4. **Template** 코딩하기
+  - 화면 UI 설계
 5. **View** 코딩
+  - 애플리케이션 로직 개발
 
 <br>
 
@@ -61,8 +70,6 @@
 <br>
 
 1. **프로젝트 뼈대** 만들기
-  - 프로젝트: 웹 사이트의 전체 프로그램
-  - 프로젝트와 앱에 필요한 **디렉토리와 파일** 생성
   - **프로젝트 생성**
     - `django-admin startproject mysite`: mysite라는 프로젝트 생성
     - `move mysite projectsite`: 프로젝트 이름 변경(mysite안에 mysite 폴더가 있기 때문에)
@@ -80,9 +87,61 @@
       - `INSTALLED_APP = [ ~, polls.apps.PollsConfig]` 추가(애플리케이션들을 설정파일에 등록)
       - `TIME_ZONE = Asia/Seoul` 추가
       - 프로젝트에 사용할 데이터베이스 엔진: SQLite3(기본값)
+      - 데이터베이스 설정
+  ```python
+  #Oracle
+  DATABASES = {
+      'default': {
+          'ENGINE': 'django.db.backends.oracle',
+          'NAME': 'SID',
+          'USER': '유저ID',
+          'PASSWORD': '비밀번호',
+          'HOST': '호스트',
+          'PORT': '1521',
+      }
+  }
+
+  # MySQL
+  DATABASES = { 
+    'default': { 
+        'ENGINE': 'django.db.backends.mysql', 
+          'NAME': '데이터베이스 이름', 
+          'USER': '아이디(ex:root)', 
+          'PASSWORD': '비밀번호', 
+          'HOST': 'localhost', 
+          'PORT': '3306', 
+      } 
+  }
+
+  # MongoDB
+  DATABASES = {
+      'default': {
+          'ENGINE': 'djongo',
+          'ENFORCE_SCHEMA': True,
+          'LOGGING': {
+              'version': 1,
+              'loggers': {
+                  'djongo': {
+                      'level': 'DEBUG',
+                      'propogate': False,                        
+                  }
+              },
+          },
+          'NAME': '원하는 데이터베이스의 이름을 넣어주세요',
+          'CLIENT': {
+              'host': '127.0.0.1',
+              'port': 27017,
+              'username': '몽고DB 사용자 계정을 넣어주세요',
+              'password': "몽고DB 사용자 비밀번호 넣어주세요",
+              'authSource': 'admin',
+              'authMechanism': 'SCRAM-SHA-1'
+          }
+      }
+  }
+  ```
 
   - **기본 테이블 생성**
-    - `python manage.py migrate`: 데이터베이스에 기본 테이블 생성, 데이터베이스에 변경사항이 있을 때 반영해주는 명령
+    - `python manage.py migrate`: 데이터베이스에 기본 테이블 생성(user, group), 데이터베이스에 변경사항이 있을 때 반영해주는 명령
       - mysite말고 projectsite에서 해야함
 
   - **작업 확인하기**
@@ -103,12 +162,40 @@
 <br>
 
 2. **model** 코딩
-  > 모델: 사용될 데이터에 대한 정의를 담고 있는 장고의 클래스  
-  > ORM기법으로 애플리케이션에서 사용할 DB를 클래스로 매핑해서 코딩
-
+  - `models.py`, `admin.py`
   - 데이터베이스에 테이블을 생성하는 작업
-  - `notepad models.py`: 테이블 정의
+
+<br>
+
+  - **DB모델링**: table 필드명, 필드타입, 길이, 제약사항 등
+    - **필드 타입**
+      - Primary Key : `AutoField`, `BigAutoField`
+      - 문자열 : `CharField`, `TextField`, `SlugField`
+      - 날짜/시간 : `DateField`, `TimeField`, `DateTimeField`, `DurationField`
+      - 참/거짓 : `BooleanField`, `NullBooleanField`
+      - 숫자 : `IntegerField`, `SmallIntegerField`, `PostiveIntegerField`, `PostiveSmallIntegerField`, `BigIntegerField`, `DecimalField`, `FloatField`
+      - 파일 : `BinaryField`, `FileField`, `ImageField`, `FilePathField`
+      - 이메일 : `EmailField`
+      - URL : `URLField`
+      - UUID : `UUIDField`
+      - 아이피 : `GenericIPAddressField`
+      `Relationship Types` (`ForeignKey`, `ManyToManyField`, `OneToOneField`)
+
+    - **필드 옵션**
+      - `blank` : validation시에 empty 허용 (기본값 : False)
+      - `null` : null 허용 여부 (False)
+      - `db_index` : 인덱스 필드 여부 (False)
+      - `default` : 디폴드 값 지정, 혹은 리턴해줄 함수 지정
+      - `unique` : 현재 테이블 내 유일성 여부 (False)
+      - `choices` : select 박스 사용시 사용
+      - `validators` : validators를 수행할 함수를 다수 지정
+      - `verbose_name` : 필드 레이블, 미지정시 필드명 사용
+      - `help_text` : 필드 입력 도움말 기능
+
+
+  - `notepad models.py`: **테이블 정의**
     - `models.py`에 정의해야함
+
     - polls 애플리케이션은 Question과 Choice 두 개의 테이블이 필요  
     - 예시
   ```python
@@ -132,14 +219,14 @@
         return self.choice_text
   ```
   ```js
-  // 제약조건
+  // 제약조건 예시
   CREATE TABLE myapp_person {
     "id" seial NOT NULL PRIMARY KEY,
     "first_name" varchar(30) NOT NULL,
     "last_name" varchar(30), NOT NULL
   };
   ```
-  - `notepad admins.py`: 정의된 테이블이 Admin화면에 보이게 함
+  - `notepad admins.py`: 정의된 테이블이 **Admin화면**에 보이게 함
   ```python
   from django.contrib import admin
   from polls.models import Question, Choice
@@ -148,18 +235,25 @@
   admin.site.register(Question)
   admin.site.register(Choice)
   ```
-  - `python manage.py makemigrations`: 데이터베이스에 변경이 필요한 사항이 있으면 실제로 반영해주는 작업
+  - `python manage.py makemigrations`: **데이터베이스에 변경**이 필요한 사항이 있으면 실제로 **반영**해주는 작업
     - 상위폴더(projectsite)로 가야함
     - polls/migrations 디렉토리 하위에 migration 파일들이 생김
+
   - `python manage.py migrate`: 데이터베이스에 변경사항 반영
+
   - `python manage.py runserver`
   - 'http://127.0.0.1:8000/admin/'에서 Question, Choice 추가한 후 'http://127.0.0.1:8000/polls'에서 확인
 
 <br>
 
 3. **URLconf** 코딩하기
-  - 파이썬의 URL 정의 방식은 자바나 PHP계열의 URL보다 직관적이고 이해하기 쉬음(Elegant URL)
-  - `urls.py`(project와 app의 파일 둘 다) 파일에 URL과 처리 함수(view)를 매핑하는 파이썬 코드 작성
+  - `urls.py`(project와 app의 파일 둘 다) 파일에 **URL**과 처리 함수(**view**)를 매핑하는 파이썬 코드 작성
+  - **처리 흐름 설계**(뷰함수와 템플릿은 서로에게 영향을 미치기 때문에 보통 같이 작업)
+    - `urls.py` 작성(URLconf 내용 코딩)
+    - `views.index()`함수 작성 + `index.html`
+    - `views.detail()`함수 작성 + `detail.html`
+    - `views.vote()`함수 작성(리다이렉션 처리)
+    - `views.results()`함수 작성 + `results.html`
   ```python
   from django.urls import path
   from . import views, include
@@ -183,14 +277,6 @@
   ]
   ```
 
-  - **처리 흐름 설계**(뷰함수와 템플릿은 서로에게 영향을 미치기 때문에 보통 같이 작업)
-    - `urls.py` 작성(URLconf 내용 코딩)
-    - `views.index()`함수 작성 + `index.html`
-    - `views.detail()`함수 작성 + `detail.html`
-    - `views.vote()`함수 작성(리다이렉션 처리)
-    - `views.results()`함수 작성 + `results.html`
-
-
 <br>
 
 4. **Template** 코딩하기
@@ -199,10 +285,35 @@
   - `detail.html`: 하나의 질문에 투표할 수 있도록 답변 항목 폼으로 보여줌
   - `results.html`: 질문에 따른 투표 결과
 
+  - **장고 템플릿 문법**
+    - 탬플릿 변수
+      - 사용 형식 : `{{variable}}`
+      - 변수 속성 접근도 도트(`.`)표현식으로 가능
+
+    - 탬플릿 필터
+      - 필터는 파이프(`|`)문자 사용
+      - `{{name|lower}}`
+
+    - 탬플릿 태그
+      - 사용 형식: `{%tag%}`
+        - `{%for%}{%endfor%}`
+        - `{%if%}{%endif%}`
+        - `{% url %}`
+        - `{% with %}`
+        - `{% load %}`
+
+    - 팸플릿 주석
+      - `{# #}`: 한 문자의 전부 또는 일부 주석 처리
+      - `{% coment %}`: 여러 줄 주석문
+
   <br>
 
 5. **View** 코딩
   - `views.py`
+    - `views.index()`함수 작성 + `index.html`
+    - `views.detail()`함수 작성 + `detail.html`
+    - `views.vote()`함수 작성(리다이렉션 처리)
+    - `views.results()`함수 작성 + `results.html`
   ```python
   from django.shortcuts import get_object_or_404, render
   from django.http import HttpResponseRedirect
@@ -224,3 +335,4 @@
   def vote(request, question_id):
     # code
   ```
+
