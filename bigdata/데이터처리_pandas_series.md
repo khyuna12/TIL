@@ -50,6 +50,10 @@ import numpy as np
 s = pd.Series([1,2,3])
 ```
 - **딕셔너리**로 만들기
+```python
+scores={'홍길동':96, '이몽룡': 100, '성춘향':88}
+s = pd.Series(scores)
+```
 - **튜플**로 만들기
 ```python
 s = pd.Series((1.0,2.0,3.0))
@@ -63,6 +67,10 @@ s = pd.Series((1.0,2.0,3.0))
 ```python
 s = pd.Series([10,20,30], index=[1,2,3])
 s = pd.Series([10,20,30], index=['홍길동','이몽룡','성춘향'])
+```
+```python
+city = {'서울': 9631482, '부산':3393191, '인천':2632035, '대전':1490158}
+s = pd.Series(city, index=city.keys())
 ```
 
 - `시리즈.index`
@@ -124,7 +132,7 @@ s1[2:4]  # index 3,4 시리즈로 반환
 
 4. **시리즈 연산**
 
-- 벡터화 연산: 집합적 자료형 원소 각각을 독립적으로 계산(numpy 배열처럼)
+- **벡터화 연산**: 집합적 자료형 원소 각각을 독립적으로 계산(numpy 배열처럼)
 ```python
 pd.Series([1,2,3]) + 4
 ```
@@ -161,6 +169,7 @@ g    NaN
 dtype: float64
 '''
 ```
+- `values` 속성 
 ```python
 num_s3.values - num_s4.values
 # array([4, 4, 4, 4], dtype=int64)
@@ -221,12 +230,12 @@ del s['서울']
 <br>
 
 7. **Series 함수**
-- size(속성): 개수
-- shape(속성): 튜플 형태로 shape 반환
-- unique: 유일한 값만 ndarray로 반환
-- count: NaN을 제외한 개수 반환
-- mean: NaN을 제외한 평균
-- value_counts: NaN을 제외하고 각 값들의 빈도를 반환
+- `size`(속성): 개수
+- `shape`(속성): 튜플 형태로 shape 반환
+- `unique`: 유일한 값만 ndarray로 반환
+- `count`: NaN을 제외한 개수 반환
+- `mean`: NaN을 제외한 평균
+- `value_counts`: NaN을 제외하고 각 값들의 빈도를 반환
 
 ```python
 s1 = pd.Series([1,1,2,1,2,2,2,1,1,3,3,4,5,5,7,np.NaN])
