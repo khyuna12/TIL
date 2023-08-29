@@ -1,5 +1,9 @@
 ### DB(DataBase): 설계(1)
 1. 모델링: 경력 필요한 경우 많음
+  - 데이터 식별(저장/활용)
+  - 데이터 흐름(입력/처리/출력)
+  - db 생성, table 생성, 필드명, 필드타입, 필드길이 등 정의, 제약조건 정의
+  - table들 연결
 2. 저장
 3. 검색
 
@@ -130,7 +134,7 @@
 
 <br>
 
-- **데이터베이스 구축/관리 및 활용** 
+#### **데이터베이스 구축/관리 및 활용** 
   - DBMS 설치
   
   - 데이터베이스 구축 절차
@@ -139,7 +143,7 @@
     - **데이터 입력(모델링 끝나고)**
     - **데이터 조회/활용**
 
-  - 테이블 외의 데이터베이스 개체의 활용: DB 모델링
+  - 테이블 외의 데이터베이스 개체의 활용
     - 데이터 백업 및 관리
 
   - 응용 프로그램에서 구축된 데이터 활용(웹 서비스/애플리케이션)
@@ -181,12 +185,6 @@
 - DBMS 제작 회사와 독립적
 - 분산형 클라이언트/서버 구조
 - 대화식 언어
-
-#### NoSQL(JSON)
-
-- MongoDB
-- HBASE(하둡)
-- `{key: value}`
 
 <br>
 
@@ -257,47 +255,3 @@ CREATE TABLE buytbl
    , FOREIGN KEY(userid) REFERENCES usertbl(userID)
 );
 ```
-
-- **python이랑 연동하기**
-
-1. 라이브러리 가져오기
-  - `!pip install pymysql` -> MariaDB도 마찬가지
-  - 오라클: `!pip install cx_Oracle`
-  - `import pymysql`
-
-2. 접속하기
-  - 고속도로
-  - `db = pymysql.connect(host, port, user, pw, db)`
-    - `host`: 접속할 mysql server 주소
-    - `port`: 접속할 mysql server 포트 번호
-    - `user`: mysql ID
-    - `passwd`: mysql ID의 암호
-    - `db`: 접속할 데이터베이스
-    - `charset=utf8`: mysql에서 select하여 데이터 가져올 때 한글이 깨질 수 있으므로 연결 설정에 넣어줌
-
-3. 커서 가져오기
-  - 데이터 전용도로
-  - `cursor = db.cursor()`: cursor Object 가져오기
-
-4. SQL문 작성하기(CRUD SQL 구문 작성)
-  - `select`, `update`, `delete`, `insert`
-  - `sql = select * from table`
-
-5. SQL문 실행하기
-  - `cursor.execute(sql)`
-  
-  - `result = cursor.fetchall()`: 데이터베이스 전부 보여줌
-  - `cursor.fetchone()`
-  - `cursor.fetchmany()`
-
-6. DB commit하기(실행 mysql 서버에 확정 반영)
-  - `select`할 때는 상관없음
-  - `update`, `delete`, `insert` 데이터가 변경/추가 할 때 커밋 필수
-  - `db.commit()`: 안 하면 선배들한테 혼남(락 오랫동안 -> 데드락 -> 시스템 다운됨)
-
-7. DB 연결 닫기
-  - `close()`
-  - 안 닫으면 서버 부하 올 수도 있음
-
-- 연결 - close: `with`랑 비슷
-  
